@@ -58,40 +58,8 @@ public extension PlayerViewDelegate {
     }
 }
 
-public enum PlayerViewFillMode {
-    case resizeAspect
-    case resizeAspectFill
-    case resize
-    
-    init?(videoGravity: String){
-        switch videoGravity {
-        case AVLayerVideoGravityResizeAspect:
-            self = .resizeAspect
-        case AVLayerVideoGravityResizeAspectFill:
-            self = .resizeAspectFill
-        case AVLayerVideoGravityResize:
-            self = .resize
-        default:
-            return nil
-        }
-    }
-    
-    var AVLayerVideoGravity:String {
-        get {
-            switch self {
-            case .resizeAspect:
-                return AVLayerVideoGravityResizeAspect
-            case .resizeAspectFill:
-                return AVLayerVideoGravityResizeAspectFill
-            case .resize:
-                return AVLayerVideoGravityResize
-            }
-        }
-    }
-}
-
 private extension CMTime {
-    static var zero:CMTime { return kCMTimeZero }
+    static var zero: CMTime { return kCMTimeZero }
 }
 /// A simple `UIView` subclass that is backed by an `AVPlayerLayer` layer.
 public class PlayerView: UIView {
@@ -131,9 +99,9 @@ public class PlayerView: UIView {
     }
     
     
-    public var fillMode: PlayerViewFillMode! {
+    public var fillMode: AVLayerVideoGravity! {
         didSet {
-            playerLayer.videoGravity = fillMode.AVLayerVideoGravity
+            playerLayer.videoGravity = fillMode
         }
     }
     
@@ -236,7 +204,7 @@ public class PlayerView: UIView {
             } as AnyObject?
     }
     
-    func playerItemDidPlayToEndTime(aNotification: NSNotification) {
+    @objc func playerItemDidPlayToEndTime(aNotification: NSNotification) {
         //notification of player to stop
         let item = aNotification.object as! PVPlayerItem
         if loopVideosQueue && player?.items().count == 1,
